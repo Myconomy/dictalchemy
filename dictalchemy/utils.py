@@ -94,7 +94,6 @@ def asdict(model, exclude=None, exclude_underscore=None, exclude_pk=None,
 
     columns = [c.key for c in info.mapper.column_attrs]
     synonyms = [c.key for c in info.mapper.synonyms]
-    relations = [c.key for c in info.mapper.relationships]
 
     if only:
         attrs = only
@@ -122,7 +121,7 @@ def asdict(model, exclude=None, exclude_underscore=None, exclude_pk=None,
     data = dict([(k, getattr(model, k)) for k in attrs])
 
     for (rel_key, orig_args) in follow.iteritems():
-        if rel_key not in relations:
+        if not hasattr(model, rel_key):
             raise errors.MissingRelationError(rel_key)
 
         args = copy.deepcopy(orig_args)
